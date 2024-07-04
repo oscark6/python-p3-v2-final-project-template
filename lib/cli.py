@@ -3,7 +3,7 @@ import sqlite3
 #from models import Electronic, Feature
 #from models.electronic import Electronic
 #from .helpers import add_electronic
-from helpers import create_tables, add_electronic, add_feature, get_all_electronics, delete_electronic, update_electronic,get_features_for_electronic,execute_query
+from helpers import create_tables, add_electronic, delete_electronic, update_electronic, get_all_electronics, find_electronics_by_name 
 DATABASE = 'electronics.db'
 
 @click.group()
@@ -18,7 +18,7 @@ def menu():
         click.echo("\nPlease select an option:")
         click.echo("1. Add a new electronic item")
         click.echo("2. List all electronic items")
-        click.echo("3. Find electronic items by tag")
+        click.echo("3. Find electronic items by name")
         click.echo("4. Delete an electronic item")
         click.echo("5. Update an electronic item")
         click.echo("0. Exit")
@@ -33,7 +33,13 @@ def menu():
         elif choice == 2:
             list_electronics()
         elif choice == 3:
-            find_electronics()
+            #get_all_electronics()
+            electronic_name = input("enter the electronic to find: ")
+            result = find_electronics_by_name(electronic_name) 
+            if result:
+                print("electronic found:",result)
+            else :
+                print("electronic not found")
         elif choice == 4:
             delete_electronic()
         elif choice == 5:
@@ -86,7 +92,7 @@ def list_electronics():
         click.echo("List of electronic items:")
         for electronic in electronics:
             click.echo(f"ID: {electronic[0]}, Name: {electronic[1]}, Brand: {electronic[2]}, Price: {electronic[3]}")
-            cursor.execute("SELECT name FROM features WHERE electronic_id = ?", (electronic[0],))
+            #cursor.execute("SELECT name FROM features WHERE electronic_id = ?", (electronic[0],))
             features = cursor.fetchall()
             for feature in features:
                 click.echo(f"    Feature: {feature[0]}")
@@ -95,19 +101,19 @@ def list_electronics():
     
     conn.close()
 
-def find_electronics():
+def get_all_electronics():
     """Find electronic items by tag"""
-    tag = click.prompt("Enter tag to search", type=str)
+   # tag = click.prompt("Enter tag to search", type=str)
     conn = sqlite3.connect(DATABASE)
     cursor = conn.cursor()
-    cursor.execute("SELECT * FROM electronics WHERE name LIKE ? OR brand LIKE ?", (f'%{tag}%', f'%{tag}%'))
+   # cursor.execute("SELECT * FROM electronics WHERE name LIKE ? OR brand LIKE ?", (f'%{tag}%', f'%{tag}%'))
     electronics = cursor.fetchall()
 
     if electronics:
         for electronic in electronics:
             click.echo(f"ID: {electronic[0]}, Name: {electronic[1]}, Brand: {electronic[2]}, Price: {electronic[3]}")
     else:
-        click.echo("No electronic items found with the given tag.")
+        click.echo("No electronic items found with the given name {name}.")
     
     conn.close()
 

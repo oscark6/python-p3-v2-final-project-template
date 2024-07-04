@@ -47,8 +47,15 @@ def add_electronic(name, brand, price):
 def get_all_electronics():
     return execute_query("SELECT * FROM electronics", fetchall=True)
 
-def find_electronics_by_tag(tag):
-    return execute_query("SELECT * FROM electronics WHERE tags LIKE ?", (f"%{tag}%",), fetchall=True)
+def find_electronics_by_name(name):
+   # return execute_query("SELECT * FROM electronics WHERE tags LIKE ?", (f"%{tag}%",), fetchall=True)
+  # return execute_query("SELECT * FROM electronics WHERE name = ?", (name,))
+  conn = sqlite3.connect('electronics.db')
+  cursor = conn.cursor()
+  cursor.execute("SELECT * FROM electronics WHERE name = ?", (name,))
+  electronic = cursor.fetchone()
+  conn.close()
+  return electronic
 
 def delete_electronic(electronic_id):
     execute_query("DELETE FROM electronics WHERE id=?", (electronic_id,), commit=True)
