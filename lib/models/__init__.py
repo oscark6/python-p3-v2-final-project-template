@@ -1,6 +1,3 @@
-from .electronic import Electronic
-from .feature import Feature
-
 import sqlite3
 
 CONN = sqlite3.connect('company.db')

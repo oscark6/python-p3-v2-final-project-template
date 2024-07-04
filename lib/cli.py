@@ -1,9 +1,9 @@
 import click
 import sqlite3
-from models import Electronic, Feature
+#from models import Electronic, Feature
 #from models.electronic import Electronic
-from .helpers import add_electronic
-#from helpers import create_tables, add_electronic, add_feature, find_electronics_by_tag, delete_electronic, update_electronic
+#from .helpers import add_electronic
+from helpers import create_tables, add_electronic, add_feature, get_all_electronics, delete_electronic, update_electronic,get_features_for_electronic,execute_query
 DATABASE = 'electronics.db'
 
 @click.group()
@@ -52,14 +52,14 @@ def add_electronic_item():
     cursor.execute("INSERT INTO electronics (name, brand, price) VALUES (?, ?, ?)", (name, brand, price))
     electronic_id = cursor.lastrowid
 
-    add_eletronic(name,brand,price)
+    add_electronic(name,brand,price)
     #electronic = Electronic(name, brand, price)
     add_features(electronic_id)
 
     conn.commit()
     conn.close()
 
-    click.echo(f"Added electronic item: {electronic}")
+    click.echo(f"Added electronic item: {electronic_id}")
 
 def add_features(electronic_id):
     """Add features for an electronic item"""
@@ -137,5 +137,5 @@ def update_electronic():
     click.echo("Electronic item updated.")
 
 if __name__ == "__main__":
-    #create_tables()
+    create_tables()
     cli()
